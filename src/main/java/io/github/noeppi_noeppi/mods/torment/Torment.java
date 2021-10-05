@@ -42,6 +42,8 @@ public final class Torment extends ModXRegistration {
         MinecraftForge.EVENT_BUS.addListener(CapabilityTorment::playerJoin);
         MinecraftForge.EVENT_BUS.addListener(CapabilityTorment::playerCopy);
         MinecraftForge.EVENT_BUS.addListener(CapabilityTorment::playerTick);
+        
+        MinecraftForge.EVENT_BUS.register(new EventListener());
     }
 
     @Override

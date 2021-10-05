@@ -30,7 +30,7 @@ public class GlowBerrySyrup extends ItemBase {
             }
             player.awardStat(Stats.ITEM_USED.get(this));
             if (!level.isClientSide) {
-                TormentData.get(player).addLevel(-2);
+                TormentData.get(player).cure(18000, 2);
             }
             if (!player.isCreative()) {
                 stack.shrink(1);
