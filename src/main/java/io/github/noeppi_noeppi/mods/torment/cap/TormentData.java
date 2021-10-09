@@ -161,7 +161,7 @@ public class TormentData {
     }
     
     public void addPendingDevilMob(Entity mob) {
-        if (pendingDevilMobs.size() >= 30) {
+        if (pendingDevilMobs.size() >= 20) {
             pendingDevilMobs.remove(0);
         }
         if (!this.pendingDevilMobs.contains(mob.getUUID())) {
