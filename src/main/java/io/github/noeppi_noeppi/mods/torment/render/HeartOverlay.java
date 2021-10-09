@@ -73,10 +73,10 @@ public class HeartOverlay implements IIngameOverlay {
                     y -= 2;
                 }
                 
-                if (idx <= Math.ceil(purple / 2d)) {
+                if (idx + 1 <= Math.ceil(purple / 2d)) {
                     this.renderHeart(poseStack, 0, x, y, 20, highlight, false, hardcore);
 
-                    int fullHeartLife = idx * 2;
+                    int fullHeartLife = (idx + 1) * 2;
 
                     if (idx < hearts) {
 

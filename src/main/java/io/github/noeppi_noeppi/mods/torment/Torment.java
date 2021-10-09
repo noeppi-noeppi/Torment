@@ -15,6 +15,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fmlclient.registry.ClientRegistry;
 
 import javax.annotation.Nonnull;
 
@@ -58,6 +59,7 @@ public final class Torment extends ModXRegistration {
 
     @Override
     protected void clientSetup(FMLClientSetupEvent event) {
+        ClientRegistry.registerKeyBinding(Keybinds.POSSESS_MOB);
         OverlayRegistry.registerOverlayAbove(ForgeIngameGui.PLAYER_HEALTH_ELEMENT, this.modid + "_hearts", HeartOverlay.INSTANCE);
     }
 

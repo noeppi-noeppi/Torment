@@ -47,12 +47,14 @@ public class CapabilityTorment {
     public static void playerCopy(PlayerEvent.Clone event) {
         // Keep the data on death
         if (event.isWasDeath()) {
+            event.getOriginal().reviveCaps();
             event.getOriginal().getCapability(DATA).ifPresent(oldData -> {
                 event.getPlayer().getCapability(DATA).ifPresent(newData -> {
                     newData.read(oldData.write());
                     newData.deathValues();
                 });
             });
+            event.getOriginal().invalidateCaps();
         }
     }
     

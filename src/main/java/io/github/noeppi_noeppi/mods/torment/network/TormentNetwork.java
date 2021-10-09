@@ -18,5 +18,6 @@ public class TormentNetwork extends NetworkX {
     @Override
     protected void registerPackets() {
         this.register(new TormentDataSerializer(), () -> TormentDataHandler::handle, NetworkDirection.PLAY_TO_CLIENT);
+        this.register(new PossessMobSerializer(), () -> PossessMobHandler::handle, NetworkDirection.PLAY_TO_SERVER);
     }
 }

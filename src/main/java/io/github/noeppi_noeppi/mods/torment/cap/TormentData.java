@@ -6,12 +6,12 @@ import io.github.noeppi_noeppi.mods.torment.network.TormentDataSerializer;
 import io.github.noeppi_noeppi.mods.torment.ritual.Ritual;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.StringTag;
-import net.minecraft.nbt.Tag;
+import net.minecraft.nbt.*;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fmllegacy.network.PacketDistributor;
@@ -19,6 +19,7 @@ import net.minecraftforge.fmllegacy.network.PacketDistributor;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class TormentData {
     
@@ -40,6 +41,7 @@ public class TormentData {
     private float tormentLevel;
     private float effectLevel;
     private final List<Ability> abilities = new ArrayList<>();
+    private final List<UUID> pendingDevilMobs = new ArrayList<>();
     
     // Not saved, rituals will stop if you log out
     private Ritual currentRitual;
@@ -64,7 +66,7 @@ public class TormentData {
             if (player.tickCount % 5 == 3) {
                 float tormentDiff = Math.max(0, 10 + this.player.getHealth() - tormentLevel);
                 float tormentFactor = tormentDiff / 5;
-                float healthFactor = 2 * (1 - (this.player.getHealth() / this.player.getMaxHealth()));
+                float healthFactor = 2 * (1 - (this.player.getHealth() / (this.player.getMaxHealth() + 10)));
                 float dest = tormentDiff >= 20 ? 0 : tormentLevel * tormentFactor * healthFactor;
                 float newEffect = ((2 * effectLevel) + dest) / 3f;
                 if (dest != effectLevel) {
@@ -149,12 +151,38 @@ public class TormentData {
         // Keep target level
         effectLevel = 0;
         tormentLevel = 0;
+        pendingDevilMobs.clear();
     }
     
     public void cure(int time, float levels) {
         cureTimer = Math.max(cureTimer, time);
         curedLevels += levels;
         sync();
+    }
+    
+    public void addPendingDevilMob(Entity mob) {
+        if (pendingDevilMobs.size() >= 30) {
+            pendingDevilMobs.remove(0);
+        }
+        if (!this.pendingDevilMobs.contains(mob.getUUID())) {
+            this.pendingDevilMobs.add(mob.getUUID());
+        }
+    }
+    
+    public void targetAggro(@Nullable Entity target) {
+        if (player != null && target instanceof LivingEntity living) {
+            for (UUID uid : this.pendingDevilMobs) {
+                if (player.getLevel().getEntity(uid) instanceof Mob mob) {
+                    if (target != mob) {
+                        mob.setTarget(living);
+                    }
+                }
+            }
+        }
+    }
+    
+    public boolean isPossessed(@Nullable Entity target) {
+        return target != null && this.pendingDevilMobs.contains(target.getUUID());
     }
 
     public CompoundTag write() {
@@ -165,11 +193,17 @@ public class TormentData {
         nbt.putInt("CureTimer", cureTimer);
         nbt.putFloat("CuredLevels", curedLevels);
         
-        ListTag list = new ListTag();
+        ListTag abilityList = new ListTag();
         for (Ability ability : abilities) {
-            list.add(StringTag.valueOf(ability.name()));
+            abilityList.add(StringTag.valueOf(ability.name()));
         }
-        nbt.put("Abilities", list);
+        nbt.put("Abilities", abilityList);
+        
+        ListTag targetList = new ListTag();
+        for (UUID uid : pendingDevilMobs) {
+            targetList.add(NbtUtils.createUUID(uid));
+        }
+        nbt.put("DevilMobs", targetList);
         
         return nbt;
     }
@@ -181,12 +215,22 @@ public class TormentData {
         cureTimer = nbt.getInt("CureTimer");
         curedLevels = nbt.getFloat("CuredLevels");
         
-        ListTag list = nbt.getList("Abilities", Constants.NBT.TAG_STRING);
+        ListTag abilityList = nbt.getList("Abilities", Constants.NBT.TAG_STRING);
         abilities.clear();
-        for (Tag tag : list) {
+        for (Tag tag : abilityList) {
             String key = tag.getAsString();
             try {
                 abilities.add(Ability.valueOf(key));
+            } catch (IllegalArgumentException e) {
+                //
+            }
+        }
+
+        ListTag targetList = nbt.getList("DevilMobs", Constants.NBT.TAG_INT_ARRAY);
+        pendingDevilMobs.clear();
+        for (Tag tag : targetList) {
+            try {
+                pendingDevilMobs.add(NbtUtils.loadUUID(tag));
             } catch (IllegalArgumentException e) {
                 //
             }
