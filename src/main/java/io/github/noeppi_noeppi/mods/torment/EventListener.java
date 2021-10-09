@@ -2,6 +2,7 @@ package io.github.noeppi_noeppi.mods.torment;
 
 import io.github.noeppi_noeppi.mods.torment.ability.Ability;
 import io.github.noeppi_noeppi.mods.torment.cap.TormentData;
+import io.github.noeppi_noeppi.mods.torment.effect.EffectManager;
 import io.github.noeppi_noeppi.mods.torment.network.PossessMobSerializer;
 import io.github.noeppi_noeppi.mods.torment.ritual.LightningRitual;
 import io.github.noeppi_noeppi.mods.torment.ritual.MineRitual;
@@ -16,9 +17,11 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -70,6 +73,7 @@ public class EventListener {
     @SubscribeEvent
     @OnlyIn(Dist.CLIENT)
     public void clientTick(TickEvent.ClientTickEvent event) {
+        EffectManager.tick();
         if (Keybinds.POSSESS_MOB.consumeClick()) {
             if (Minecraft.getInstance().player != null) {
                 TormentData data = TormentData.get(Minecraft.getInstance().player);
@@ -77,6 +81,21 @@ public class EventListener {
                     Torment.getNetwork().channel.sendToServer(new PossessMobSerializer.PossessMobMessage());
                 }
             }
+        }
+    }
+    
+    @SubscribeEvent
+    @OnlyIn(Dist.CLIENT)
+    public void clientTick(ClientPlayerNetworkEvent.LoggedInEvent event) {
+        EffectManager.reset();
+    }
+    
+    @SubscribeEvent
+    @OnlyIn(Dist.CLIENT)
+    public void clientTick(PlayerEvent.PlayerLoggedInEvent event) {
+        if (Minecraft.getInstance().getSingleplayerServer() != null && Minecraft.getInstance().player != null
+                && event.getPlayer().getUUID().equals(Minecraft.getInstance().player.getUUID())) {
+            EffectManager.reset();
         }
     }
 }

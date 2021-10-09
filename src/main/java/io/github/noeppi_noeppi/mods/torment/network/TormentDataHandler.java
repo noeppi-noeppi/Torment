@@ -1,6 +1,7 @@
 package io.github.noeppi_noeppi.mods.torment.network;
 
 import io.github.noeppi_noeppi.mods.torment.cap.CapabilityTorment;
+import io.github.noeppi_noeppi.mods.torment.effect.EffectManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraftforge.fmllegacy.network.NetworkEvent;
@@ -14,6 +15,7 @@ public class TormentDataHandler {
             LocalPlayer player = Minecraft.getInstance().player;
             if (player != null) {
                 player.getCapability(CapabilityTorment.DATA).ifPresent(cap -> cap.read(msg.data()));
+                EffectManager.recalculateEffects();
             }
         });
         ctx.get().setPacketHandled(true);
