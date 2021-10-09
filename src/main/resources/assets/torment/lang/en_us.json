@@ -1,4 +1,5 @@
 {
   "itemGroup.torment": "Torment",
-  "item.torment.glow_berry_syrup": "Glowberry Syrup"
+  "item.torment.glow_berry_syrup": "Glowberry Syrup",
+  "torment.possess_mob": "Possess Mob"
 }
