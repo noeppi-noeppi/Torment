@@ -3,6 +3,8 @@ package io.github.noeppi_noeppi.mods.torment;
 import io.github.noeppi_noeppi.libx.mod.registration.ModXRegistration;
 import io.github.noeppi_noeppi.libx.mod.registration.RegistrationBuilder;
 import io.github.noeppi_noeppi.mods.torment.cap.CapabilityTorment;
+import io.github.noeppi_noeppi.mods.torment.effect.EffectManager;
+import io.github.noeppi_noeppi.mods.torment.effect.instances.SoundEffect;
 import io.github.noeppi_noeppi.mods.torment.network.TormentNetwork;
 import io.github.noeppi_noeppi.mods.torment.render.HeartOverlay;
 import net.minecraft.world.entity.Entity;
@@ -54,7 +56,7 @@ public final class Torment extends ModXRegistration {
 
     @Override
     protected void setup(FMLCommonSetupEvent event) {
-
+        EffectManager.registerEffect(SoundEffect.INSTANCE);
     }
 
     @Override

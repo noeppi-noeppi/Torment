@@ -20,7 +20,7 @@ public class EffectManager {
     private static int ticksSinceLastEffect = 0;
     private static float usedEffectLevel = 0;
     
-    public static void registerEffect(TormentEffect effect) {
+    public static synchronized void registerEffect(TormentEffect effect) {
         allEffects.add(effect);
         recalculateEffects();
     }
@@ -35,20 +35,22 @@ public class EffectManager {
     }
     
     public static void tick() {
-        tickPending();
-        tickRunning();
-        tickCoolDown();
-        
-        if (needsRecalculateEffects) {
-            needsRecalculateEffects = false;
-            doRecalculateEffects();
+        if (Minecraft.getInstance().level != null && !Minecraft.getInstance().isPaused()) {
+            tickPending();
+            tickRunning();
+            tickCoolDown();
+
+            if (needsRecalculateEffects) {
+                needsRecalculateEffects = false;
+                doRecalculateEffects();
+            }
         }
     }
     
     private static void tickPending() {
         ticksSinceLastEffect += 1;
         if (!effects.isEmpty()) {
-            int div = ticksSinceLastEffect / 100;
+            int div = ticksSinceLastEffect / 300;
             if (div > 0 && random.nextDouble() > (1d / div)) {
                 TormentEffect effect = effects.random(random);
                 if (effect != null) {
@@ -59,11 +61,23 @@ public class EffectManager {
     }
     
     private static void startEffect(TormentEffect effect) {
-        EffectConfig config = effect.start();
-        ticksSinceLastEffect = 0;
-        usedEffectLevel += config.strength();
-        runningEffects.put(effect, new EffectRuntime(config));
-        recalculateEffects();
+        if (Minecraft.getInstance().player != null) {
+            EffectConfig config = effect.start(Minecraft.getInstance().player, random);
+            if (config != null) {
+                ticksSinceLastEffect = 0;
+                usedEffectLevel += config.strength();
+                if (config.duration() <= 0) {
+                    effect.stop(Minecraft.getInstance().player, random);
+                    int coolDownTime = effect.minCoolDown();
+                    if (coolDownTime > 0) {
+                        coolDowns.put(effect, coolDownTime);
+                    }
+                } else {
+                    runningEffects.put(effect, new EffectRuntime(config));
+                }
+                recalculateEffects();
+            }
+        }
     }
     
     private static void tickRunning() {
@@ -71,7 +85,9 @@ public class EffectManager {
         while (itr.hasNext()) {
             Map.Entry<TormentEffect, EffectRuntime> entry = itr.next();
             if (entry.getValue().tick()) {
-                entry.getKey().stop();
+                if (Minecraft.getInstance().player != null) {
+                    entry.getKey().stop(Minecraft.getInstance().player, random);
+                }
                 usedEffectLevel -= entry.getValue().config.strength();
                 itr.remove();
                 int coolDownTime = entry.getKey().minCoolDown();
@@ -80,7 +96,9 @@ public class EffectManager {
                 }
                 recalculateEffects();
             } else {
-                entry.getKey().update();
+                if (Minecraft.getInstance().player != null) {
+                    entry.getKey().update(Minecraft.getInstance().player, random);
+                }
             }
         }
     }

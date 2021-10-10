@@ -27,6 +27,7 @@ public class PossessMobHandler {
                         }
                         if (!data.isPossessed(entity)) {
                             data.addPendingDevilMob(entity);
+                            entity.setPersistenceRequired();
                             AABB entityAABB = entity.getBoundingBox();
                             player.getLevel().sendParticles(
                                     ParticleTypes.POOF, entity.getX(), entity.getY() + (entityAABB.getYsize() / 4d), entity.getZ(),
