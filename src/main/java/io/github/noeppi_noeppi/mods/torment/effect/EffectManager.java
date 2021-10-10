@@ -138,8 +138,16 @@ public class EffectManager {
         }
     }
     
-    public boolean isRunning(TormentEffect effect) {
+    public static boolean isRunning(TormentEffect effect) {
         return runningEffects.containsKey(effect);
+    }
+    
+    public static int getRunningTicks(TormentEffect effect) {
+        if (runningEffects.containsKey(effect)) {
+            return runningEffects.get(effect).ticks;
+        } else {
+            return -1;
+        }
     }
     
     private static class EffectRuntime {

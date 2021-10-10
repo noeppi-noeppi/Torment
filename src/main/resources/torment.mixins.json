@@ -4,7 +4,9 @@
   "refmap": "torment.refmap.json",
   "package": "io.github.noeppi_noeppi.mods.torment.mixin",
   "minVersion": "0.8",
-  "client": [],
+  "client": [
+    "MixinMouseHandler"
+  ],
   "server": [],
   "mixins": [
     "MixinItemEntity",

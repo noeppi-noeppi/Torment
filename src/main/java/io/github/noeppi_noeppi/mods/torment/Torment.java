@@ -4,9 +4,14 @@ import io.github.noeppi_noeppi.libx.mod.registration.ModXRegistration;
 import io.github.noeppi_noeppi.libx.mod.registration.RegistrationBuilder;
 import io.github.noeppi_noeppi.mods.torment.cap.CapabilityTorment;
 import io.github.noeppi_noeppi.mods.torment.effect.EffectManager;
+import io.github.noeppi_noeppi.mods.torment.effect.instances.MouseStutterEffect;
+import io.github.noeppi_noeppi.mods.torment.effect.instances.RandomBlocksEffect;
 import io.github.noeppi_noeppi.mods.torment.effect.instances.SoundEffect;
 import io.github.noeppi_noeppi.mods.torment.network.TormentNetwork;
 import io.github.noeppi_noeppi.mods.torment.render.HeartOverlay;
+import io.github.noeppi_noeppi.mods.torment.render.RandomBlockRender;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.FogRenderer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
@@ -45,6 +50,7 @@ public final class Torment extends ModXRegistration {
         MinecraftForge.EVENT_BUS.addListener(CapabilityTorment::playerJoin);
         MinecraftForge.EVENT_BUS.addListener(CapabilityTorment::playerCopy);
         MinecraftForge.EVENT_BUS.addListener(CapabilityTorment::playerTick);
+        MinecraftForge.EVENT_BUS.addListener(RandomBlockRender::renderWorld);
         
         MinecraftForge.EVENT_BUS.register(new EventListener());
     }
@@ -56,13 +62,15 @@ public final class Torment extends ModXRegistration {
 
     @Override
     protected void setup(FMLCommonSetupEvent event) {
-        EffectManager.registerEffect(SoundEffect.INSTANCE);
+        
     }
 
     @Override
     protected void clientSetup(FMLClientSetupEvent event) {
         ClientRegistry.registerKeyBinding(Keybinds.POSSESS_MOB);
         OverlayRegistry.registerOverlayAbove(ForgeIngameGui.PLAYER_HEALTH_ELEMENT, this.modid + "_hearts", HeartOverlay.INSTANCE);
+
+        EffectManager.registerEffect(MouseStutterEffect.INSTANCE);
     }
 
     @Nonnull
