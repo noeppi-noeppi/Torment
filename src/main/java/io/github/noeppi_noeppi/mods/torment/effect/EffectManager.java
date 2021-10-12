@@ -20,6 +20,8 @@ public class EffectManager {
     private static int ticksSinceLastEffect = 0;
     private static float usedEffectLevel = 0;
     
+    private static float cachedRawEffectLevel = 0;
+    
     public static synchronized void registerEffect(TormentEffect effect) {
         allEffects.add(effect);
         recalculateEffects();
@@ -31,6 +33,14 @@ public class EffectManager {
         effects = WeightTable.empty();
         ticksSinceLastEffect = 0;
         usedEffectLevel = 0;
+        cachedRawEffectLevel = 0;
+        // Add some random cool downs so players are not hit by all effects at once when joining the world.
+        for (TormentEffect effect : allEffects) {
+            int minCoolDown = effect.minCoolDown();
+            int add = minCoolDown / 2;
+            int coolDown = Math.max(0, random.nextInt(minCoolDown + add) - add);
+            coolDowns.put(effect, coolDown);
+        }
         recalculateEffects();
     }
     
@@ -60,7 +70,7 @@ public class EffectManager {
         }
     }
     
-    private static void startEffect(TormentEffect effect) {
+    public static void startEffect(TormentEffect effect) {
         if (Minecraft.getInstance().player != null) {
             EffectConfig config = effect.start(Minecraft.getInstance().player, random);
             if (config != null) {
@@ -124,6 +134,7 @@ public class EffectManager {
         if (Minecraft.getInstance().player == null) {
             coolDowns.clear();
             effects = WeightTable.empty();
+            cachedRawEffectLevel = 0;
         } else {
             TormentData data = TormentData.get(Minecraft.getInstance().player);
             float effectLevel = data.getEffectLevel();
@@ -131,10 +142,13 @@ public class EffectManager {
             for (TormentEffect effect : allEffects) {
                 if (!runningEffects.containsKey(effect) && !coolDowns.containsKey(effect)
                         && (effectLevel - usedEffectLevel) >= effect.minLevel()) {
-                    builder.add(effect, effect.weight());
+                    if (effect.cantRunWhile().stream().noneMatch(EffectManager::isRunning)) {
+                        builder.add(effect, effect.weight());
+                    }
                 }
             }
             effects = builder.build();
+            cachedRawEffectLevel = data.getEffectLevel();
         }
     }
     
@@ -149,7 +163,11 @@ public class EffectManager {
             return -1;
         }
     }
-    
+
+    public static float getCachedRawEffectLevel() {
+        return cachedRawEffectLevel;
+    }
+
     private static class EffectRuntime {
         
         public final EffectConfig config;

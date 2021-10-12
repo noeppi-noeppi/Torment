@@ -1,13 +1,16 @@
 package io.github.noeppi_noeppi.mods.torment;
 
+import com.mojang.math.Vector3f;
 import io.github.noeppi_noeppi.mods.torment.ability.Ability;
 import io.github.noeppi_noeppi.mods.torment.cap.TormentData;
 import io.github.noeppi_noeppi.mods.torment.effect.EffectManager;
+import io.github.noeppi_noeppi.mods.torment.effect.instances.StareEffect;
 import io.github.noeppi_noeppi.mods.torment.network.PossessMobSerializer;
 import io.github.noeppi_noeppi.mods.torment.ritual.LightningRitual;
 import io.github.noeppi_noeppi.mods.torment.ritual.MineRitual;
 import io.github.noeppi_noeppi.mods.torment.ritual.RitualHelper;
 import net.minecraft.client.Minecraft;
+import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LightningBolt;
@@ -15,9 +18,12 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.event.ClientChatEvent;
 import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
+import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
@@ -96,6 +102,43 @@ public class EventListener {
         if (Minecraft.getInstance().getSingleplayerServer() != null && Minecraft.getInstance().player != null
                 && event.getPlayer().getUUID().equals(Minecraft.getInstance().player.getUUID())) {
             EffectManager.reset();
+        }
+    }
+    
+    @SubscribeEvent
+    @OnlyIn(Dist.CLIENT)
+    public void renderPre(RenderLivingEvent.Pre<?, ?> event) {
+        LivingEntity entity = event.getEntity();
+        Player player = Minecraft.getInstance().player;
+        if (EffectManager.isRunning(StareEffect.INSTANCE) && entity != player && player != null) {
+            event.getMatrixStack().pushPose();
+            Vec3 entityPos = entity.getPosition(event.getPartialRenderTick());
+            Vec3 playerPos = player.getPosition(event.getPartialRenderTick());
+            double xd = entityPos.x - playerPos.x;
+            double zd = entityPos.z - playerPos.z;
+            float baseRot = zd == 0 ? Float.NaN : (float) Mth.atan2(zd, xd);
+            if (!Float.isNaN(baseRot)) {
+                event.getMatrixStack().mulPose(Vector3f.YP.rotation(-baseRot - (Mth.PI / 2)));
+                event.getMatrixStack().mulPose(Vector3f.YP.rotationDegrees(Mth.rotLerp(event.getPartialRenderTick(), entity.yBodyRotO, entity.yBodyRot)));
+            }
+        }
+    }
+    
+    @SubscribeEvent
+    @OnlyIn(Dist.CLIENT)
+    public void renderPost(RenderLivingEvent.Post<?, ?> event) {
+        LivingEntity entity = event.getEntity();
+        Player player = Minecraft.getInstance().player;
+        if (EffectManager.isRunning(StareEffect.INSTANCE) && entity != player && player != null) {
+            event.getMatrixStack().popPose();
+        }
+    }
+    
+    @SubscribeEvent
+    @OnlyIn(Dist.CLIENT)
+    public void clientChat(ClientChatEvent event) {
+        if (event.getMessage().equalsIgnoreCase("the kürbis is watching dich") & !EffectManager.isRunning(StareEffect.INSTANCE)) {
+            EffectManager.startEffect(StareEffect.INSTANCE);
         }
     }
 }
