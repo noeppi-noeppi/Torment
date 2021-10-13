@@ -23,6 +23,7 @@ public class SoundEffect implements TormentEffect {
             .add(SoundEvents.MUSIC_DISC_11, 1)
             .add(SoundEvents.ANVIL_BREAK, 3)
             .add(SoundEvents.GENERIC_EXPLODE, 3)
+            .add(SoundEvents.BELL_RESONATE, 3)
             .add(SoundEvents.STRIDER_RETREAT, 5)
             .add(SoundEvents.BEEHIVE_SHEAR, 5)
             .add(SoundEvents.CHEST_OPEN, 5)

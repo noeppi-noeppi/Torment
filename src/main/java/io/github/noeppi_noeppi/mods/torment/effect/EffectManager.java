@@ -1,6 +1,7 @@
 package io.github.noeppi_noeppi.mods.torment.effect;
 
 import io.github.noeppi_noeppi.mods.torment.cap.TormentData;
+import io.github.noeppi_noeppi.mods.torment.effect.instances.GoodbyeEffect;
 import io.github.noeppi_noeppi.mods.torment.util.WeightTable;
 import net.minecraft.client.Minecraft;
 
@@ -41,6 +42,7 @@ public class EffectManager {
             int coolDown = Math.max(0, random.nextInt(minCoolDown + add) - add);
             coolDowns.put(effect, coolDown);
         }
+        coolDowns.put(GoodbyeEffect.INSTANCE, 6000);
         recalculateEffects();
     }
     

@@ -92,13 +92,13 @@ public class EventListener {
     
     @SubscribeEvent
     @OnlyIn(Dist.CLIENT)
-    public void clientTick(ClientPlayerNetworkEvent.LoggedInEvent event) {
+    public void clientLogin(ClientPlayerNetworkEvent.LoggedInEvent event) {
         EffectManager.reset();
     }
     
     @SubscribeEvent
     @OnlyIn(Dist.CLIENT)
-    public void clientTick(PlayerEvent.PlayerLoggedInEvent event) {
+    public void singlePlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
         if (Minecraft.getInstance().getSingleplayerServer() != null && Minecraft.getInstance().player != null
                 && event.getPlayer().getUUID().equals(Minecraft.getInstance().player.getUUID())) {
             EffectManager.reset();

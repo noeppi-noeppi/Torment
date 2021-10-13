@@ -3,37 +3,40 @@ package io.github.noeppi_noeppi.mods.torment.effect.instances;
 import io.github.noeppi_noeppi.mods.torment.effect.EffectConfig;
 import io.github.noeppi_noeppi.mods.torment.effect.TormentEffect;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.protocol.game.ClientboundDisconnectPacket;
 
 import javax.annotation.Nullable;
 import java.util.Random;
 
-public class MouseStutterEffect implements TormentEffect {
+public class GoodbyeEffect implements TormentEffect {
 
-    public static final MouseStutterEffect INSTANCE = new MouseStutterEffect();
+    public static final GoodbyeEffect INSTANCE = new GoodbyeEffect();
 
-    private MouseStutterEffect() {
+    private GoodbyeEffect() {
 
     }
 
     @Override
     public int minCoolDown() {
-        return 8000;
+        return 0;
     }
 
     @Override
     public float minLevel() {
-        return 20;
+        return 70;
     }
 
     @Override
     public int weight() {
-        return 5;
+        return 2;
     }
 
     @Nullable
     @Override
     public EffectConfig start(LocalPlayer player, Random random) {
-        return new EffectConfig(500 + random.nextInt(1500), 5);
+        player.connection.handleDisconnect(new ClientboundDisconnectPacket(new TextComponent("Ahhhh AAAAhhh Ahhhh")));
+        return EffectConfig.instant(0);
     }
 
     @Override
