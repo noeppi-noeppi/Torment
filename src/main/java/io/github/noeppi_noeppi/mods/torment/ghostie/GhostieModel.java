@@ -48,7 +48,7 @@ public class GhostieModel extends HierarchicalModel<Ghostie> {
     @Override
     public void setupAnim(@Nonnull Ghostie entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         float partialTicks = Minecraft.getInstance().getDeltaFrameTime();
-        this.head.setRotation((180  + Mth.rotLerp(partialTicks, entity.yRotO, entity.getYRot())) / 180 * Mth.PI, 0, 0);
+        this.head.setRotation(Mth.PI + (Mth.rotLerp(partialTicks, entity.xRotO, entity.getXRot()) / 360 * Mth.PI), 0, 0);
         rotatePart(this.tentacle1, (entity.getUUID().getLeastSignificantBits() & 0xFF00) >> 8, partialTicks);
         rotatePart(this.tentacle2, (entity.getUUID().getLeastSignificantBits() & 0xFF000000) >> 24, partialTicks);
         rotatePart(this.tentacle3, entity.getUUID().getMostSignificantBits() & 0xFF, partialTicks);

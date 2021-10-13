@@ -7,7 +7,7 @@ import io.github.noeppi_noeppi.mods.torment.effect.EffectManager;
 import io.github.noeppi_noeppi.mods.torment.effect.instances.MouseStutterEffect;
 import io.github.noeppi_noeppi.mods.torment.network.TormentNetwork;
 import io.github.noeppi_noeppi.mods.torment.render.HeartOverlay;
-import io.github.noeppi_noeppi.mods.torment.render.RandomBlockRender;
+import io.github.noeppi_noeppi.mods.torment.render.WorldAdditionsRender;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
@@ -46,7 +46,7 @@ public final class Torment extends ModXRegistration {
         MinecraftForge.EVENT_BUS.addListener(CapabilityTorment::playerJoin);
         MinecraftForge.EVENT_BUS.addListener(CapabilityTorment::playerCopy);
         MinecraftForge.EVENT_BUS.addListener(CapabilityTorment::playerTick);
-        MinecraftForge.EVENT_BUS.addListener(RandomBlockRender::renderWorld);
+        MinecraftForge.EVENT_BUS.addListener(WorldAdditionsRender::renderWorld);
         
         MinecraftForge.EVENT_BUS.register(new EventListener());
     }

@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import io.github.noeppi_noeppi.libx.render.RenderHelperLevel;
 import io.github.noeppi_noeppi.mods.torment.effect.EffectManager;
 import io.github.noeppi_noeppi.mods.torment.effect.instances.RandomBlocksEffect;
+import io.github.noeppi_noeppi.mods.torment.ghostie.Ghosties;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -16,9 +17,10 @@ import net.minecraftforge.client.model.data.EmptyModelData;
 
 import java.util.Map;
 
-public class RandomBlockRender {
+public class WorldAdditionsRender {
     
     public static void renderWorld(RenderWorldLastEvent event) {
+        Ghosties.render(event.getMatrixStack());
         if (EffectManager.isRunning(RandomBlocksEffect.INSTANCE)) {
             Level level = Minecraft.getInstance().level;
             if (level != null) {
