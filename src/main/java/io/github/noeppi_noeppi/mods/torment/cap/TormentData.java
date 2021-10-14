@@ -64,10 +64,10 @@ public class TormentData {
                 sync();
             }
             if (player.tickCount % 5 == 3) {
-                float tormentDiff = Math.max(0, 10 + this.player.getHealth() - tormentLevel);
+                float tormentDiff = Math.max(0, 10 + tormentLevel - this.player.getHealth());
                 float tormentFactor = tormentDiff / 5;
                 float healthFactor = 2 * (1 - (this.player.getHealth() / (this.player.getMaxHealth() + 10)));
-                float dest = tormentDiff >= 20 ? 0 : tormentLevel * tormentFactor * healthFactor;
+                float dest = tormentLevel <= 0 || tormentDiff <= 0 ? 0 : tormentLevel * tormentFactor * healthFactor;
                 float newEffect = ((2 * effectLevel) + dest) / 3f;
                 if (dest != effectLevel) {
                     if (dest < effectLevel) {

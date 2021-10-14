@@ -28,7 +28,6 @@ public class GhostieRenderer {
     
     public static void renderGhostie(Ghostie ghostie, PoseStack poseStack) {
         float partialTicks = Minecraft.getInstance().getDeltaFrameTime();
-        MultiBufferSource.BufferSource buffer = Minecraft.getInstance().renderBuffers().bufferSource();
         poseStack.pushPose();
         Vec3 pos = ghostie.getPosition(Minecraft.getInstance().getDeltaFrameTime());
         RenderHelperLevel.loadProjection(poseStack, pos);
@@ -36,10 +35,11 @@ public class GhostieRenderer {
         poseStack.mulPose(Vector3f.YP.rotationDegrees(Mth.rotLerp(partialTicks, ghostie.yRotO, ghostie.getYRot())));
         random.setSeed(ghostie.getUUID().getLeastSignificantBits());
         RenderType type = types.get(random.nextInt(types.size()));
+        MultiBufferSource.BufferSource buffer = Minecraft.getInstance().renderBuffers().bufferSource();
         VertexConsumer vertex = buffer.getBuffer(type);
         model.setupAnim(ghostie, 0, 0, 0, 0, 0);
         model.renderToBuffer(poseStack, vertex, LightTexture.pack(15, 15), OverlayTexture.NO_OVERLAY, 1, 1, 1, 1);
+        buffer.endBatch(type);
         poseStack.popPose();
-        buffer.endBatch();
     }
 }

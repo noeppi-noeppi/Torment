@@ -2,6 +2,7 @@ package io.github.noeppi_noeppi.mods.torment.effect;
 
 import io.github.noeppi_noeppi.mods.torment.cap.TormentData;
 import io.github.noeppi_noeppi.mods.torment.effect.instances.GoodbyeEffect;
+import io.github.noeppi_noeppi.mods.torment.ghostie.Ghosties;
 import io.github.noeppi_noeppi.mods.torment.util.WeightTable;
 import net.minecraft.client.Minecraft;
 
@@ -44,6 +45,7 @@ public class EffectManager {
         }
         coolDowns.put(GoodbyeEffect.INSTANCE, 6000);
         recalculateEffects();
+        Ghosties.reset();
     }
     
     public static void tick() {
@@ -56,6 +58,8 @@ public class EffectManager {
                 needsRecalculateEffects = false;
                 doRecalculateEffects();
             }
+            
+            Ghosties.tick();
         }
     }
     
@@ -151,6 +155,7 @@ public class EffectManager {
             }
             effects = builder.build();
             cachedRawEffectLevel = data.getEffectLevel();
+            Ghosties.updateByLevel(data.getEffectLevel() - (0.25f * usedEffectLevel));
         }
     }
     
