@@ -25,3 +25,9 @@ description="""
     ordering="NONE"
     side="BOTH"
 
+[[dependencies.torment]]
+    modId="libx"
+    mandatory=true
+    versionRange="[1.17.1-2.1.2,)"
+    ordering="NONE"
+    side="BOTH"
