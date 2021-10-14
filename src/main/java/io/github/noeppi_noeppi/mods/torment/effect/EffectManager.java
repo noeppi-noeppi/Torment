@@ -39,9 +39,9 @@ public class EffectManager {
         // Add some random cool downs so players are not hit by all effects at once when joining the world.
         for (TormentEffect effect : allEffects) {
             int minCoolDown = effect.minCoolDown();
-            int add = minCoolDown / 2;
-            int coolDown = Math.max(0, random.nextInt(minCoolDown + add) - add);
-            coolDowns.put(effect, coolDown);
+            if ((minCoolDown / 3) > 0) {
+                coolDowns.put(effect, random.nextInt(effect.minCoolDown() / 3));
+            }
         }
         coolDowns.put(GoodbyeEffect.INSTANCE, 6000);
         recalculateEffects();

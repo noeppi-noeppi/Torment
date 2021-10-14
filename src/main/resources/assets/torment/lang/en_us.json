@@ -1,5 +1,8 @@
 {
   "itemGroup.torment": "Torment",
   "item.torment.glow_berry_syrup": "Glowberry Syrup",
-  "torment.possess_mob": "Possess Mob"
+  "torment.possess_mob": "Possess Mob",
+  "command.torment.level.get.noplayers": "No player found.",
+  "command.torment.level.get.success": "Torment level of %s: %s",
+  "command.torment.level.set.success": "Modified torment level of %s players."
 }

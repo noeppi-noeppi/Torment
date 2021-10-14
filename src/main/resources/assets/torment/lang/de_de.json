@@ -1,0 +1,8 @@
+{
+  "itemGroup.torment": "Torment",
+  "item.torment.glow_berry_syrup": "Leuchtbeersirup",
+  "torment.possess_mob": "Mob übernehmen",
+  "command.torment.level.get.noplayers": "Keine Spieler gefunden..",
+  "command.torment.level.get.success": "Torment level von %s: %s",
+  "command.torment.level.set.success": "Torment level von %s Spielern gesetzt."
+}

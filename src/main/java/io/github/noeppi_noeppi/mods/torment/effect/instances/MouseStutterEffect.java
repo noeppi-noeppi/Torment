@@ -17,7 +17,7 @@ public class MouseStutterEffect implements TormentEffect {
 
     @Override
     public int minCoolDown() {
-        return 8000;
+        return 4000;
     }
 
     @Override

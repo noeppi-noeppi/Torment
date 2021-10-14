@@ -108,6 +108,30 @@ public class TormentData {
         return tormentLevel;
     }
 
+    public float getTargetLevel() {
+        return targetLevel;
+    }
+
+    public void forceTargetLevel(float targetLevel) {
+        this.targetLevel = targetLevel;
+        this.tormentLevel = targetLevel;
+        sync();
+    }
+    
+    public void reset() {
+        cureTimer = 0;
+        curedLevels = 0;
+        targetLevel = 0;
+        tormentLevel = 0;
+        effectLevel = 0;
+        abilities.clear();
+        pendingDevilMobs.clear();
+        currentRitual = null;
+        currentRitualPos = null;
+        currentRitualTick = 0;
+        sync();
+    }
+
     public float getEffectLevel() {
         return effectLevel;
     }
@@ -116,6 +140,7 @@ public class TormentData {
         return abilities.contains(ability);
     }
     
+    @SuppressWarnings("UnusedReturnValue")
     public boolean addAbility(Ability ability) {
         if (!abilities.contains(ability)) {
             if (this.targetLevel + ability.targetCost > 20) {

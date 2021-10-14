@@ -7,6 +7,7 @@ import io.github.noeppi_noeppi.mods.torment.util.RegistryList;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
@@ -84,6 +85,7 @@ public class MobSwapEffect implements TormentEffect {
     }
     
     private Entity doTransformRenderEntity(Entity entity) {
+        if (entity instanceof Player) return entity;
         UUID uid = entity.getUUID();
         EntityType<?> type = entity.getType();
         if (type == EntityType.HORSE || type == EntityType.DONKEY || type == EntityType.MULE) {
