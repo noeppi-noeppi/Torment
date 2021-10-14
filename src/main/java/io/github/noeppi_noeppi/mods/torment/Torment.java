@@ -12,9 +12,11 @@ import io.github.noeppi_noeppi.mods.torment.render.WorldAdditionsRender;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.gui.ForgeIngameGui;
 import net.minecraftforge.client.gui.OverlayRegistry;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -47,7 +49,7 @@ public final class Torment extends ModXRegistration {
         MinecraftForge.EVENT_BUS.addListener(CapabilityTorment::playerJoin);
         MinecraftForge.EVENT_BUS.addListener(CapabilityTorment::playerCopy);
         MinecraftForge.EVENT_BUS.addListener(CapabilityTorment::playerTick);
-        MinecraftForge.EVENT_BUS.addListener(WorldAdditionsRender::renderWorld);
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> MinecraftForge.EVENT_BUS.addListener(WorldAdditionsRender::renderWorld));
         MinecraftForge.EVENT_BUS.addListener(TormentCommands::registerCommands);
         
         MinecraftForge.EVENT_BUS.register(new EventListener());
