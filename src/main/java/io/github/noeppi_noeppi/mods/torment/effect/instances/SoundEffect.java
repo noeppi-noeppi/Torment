@@ -1,5 +1,7 @@
 package io.github.noeppi_noeppi.mods.torment.effect.instances;
 
+import io.github.noeppi_noeppi.mods.torment.config.TormentConfig;
+import io.github.noeppi_noeppi.mods.torment.effect.DefaultTormentEffect;
 import io.github.noeppi_noeppi.mods.torment.effect.EffectConfig;
 import io.github.noeppi_noeppi.mods.torment.effect.TormentEffect;
 import io.github.noeppi_noeppi.mods.torment.util.WeightTable;
@@ -14,7 +16,7 @@ import net.minecraft.sounds.SoundSource;
 import javax.annotation.Nullable;
 import java.util.Random;
 
-public class SoundEffect implements TormentEffect {
+public class SoundEffect extends DefaultTormentEffect {
 
     public static final SoundEffect INSTANCE = new SoundEffect();
     
@@ -33,22 +35,7 @@ public class SoundEffect implements TormentEffect {
     private SoundInstance soundToStop = null;
 
     private SoundEffect() {
-        
-    }
-
-    @Override
-    public int minCoolDown() {
-        return 60;
-    }
-
-    @Override
-    public float minLevel() {
-        return 1;
-    }
-
-    @Override
-    public int weight() {
-        return 5;
+        super(() -> TormentConfig.effects.sounds);
     }
 
     @Nullable

@@ -1,6 +1,8 @@
 package io.github.noeppi_noeppi.mods.torment.effect.instances;
 
 import com.google.common.collect.ImmutableMap;
+import io.github.noeppi_noeppi.mods.torment.config.TormentConfig;
+import io.github.noeppi_noeppi.mods.torment.effect.DefaultTormentEffect;
 import io.github.noeppi_noeppi.mods.torment.effect.EffectConfig;
 import io.github.noeppi_noeppi.mods.torment.effect.TormentEffect;
 import io.github.noeppi_noeppi.mods.torment.util.WeightTable;
@@ -17,7 +19,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Random;
 
-public class RandomBlocksEffect implements TormentEffect {
+public class RandomBlocksEffect extends DefaultTormentEffect {
 
     public static final RandomBlocksEffect INSTANCE = new RandomBlocksEffect();
 
@@ -39,22 +41,7 @@ public class RandomBlocksEffect implements TormentEffect {
     private Map<BlockPos, BlockState> blocks = Collections.emptyMap();
     
     private RandomBlocksEffect() {
-
-    }
-
-    @Override
-    public int minCoolDown() {
-        return 6000;
-    }
-
-    @Override
-    public float minLevel() {
-        return 10;
-    }
-
-    @Override
-    public int weight() {
-        return 2;
+        super(() -> TormentConfig.effects.random_blocks);
     }
 
     @Nullable

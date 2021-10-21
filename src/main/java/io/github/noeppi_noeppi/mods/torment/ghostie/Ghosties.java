@@ -1,6 +1,7 @@
 package io.github.noeppi_noeppi.mods.torment.ghostie;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import io.github.noeppi_noeppi.mods.torment.config.TormentConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -47,10 +48,10 @@ public class Ghosties {
     }
     
     public static void updateByLevel(float level) {
-        if (level < 10) {
+        if (level < TormentConfig.ghosties.min_level) {
             updateGhosties(0);
         } else {
-            updateGhosties(Math.round((2.5f * (float) Math.atan((0.16f * level) - 7)) + 4.4f));
+            updateGhosties(Math.round(((2.5f * (float) Math.atan((0.16f * (level + TormentConfig.ghosties.adjustment_x)) - 7)) + 4.4f) + TormentConfig.ghosties.adjustment_y));
         }
     }
     

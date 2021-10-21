@@ -1,5 +1,7 @@
 package io.github.noeppi_noeppi.mods.torment.effect.instances;
 
+import io.github.noeppi_noeppi.mods.torment.config.TormentConfig;
+import io.github.noeppi_noeppi.mods.torment.effect.DefaultTormentEffect;
 import io.github.noeppi_noeppi.mods.torment.effect.EffectConfig;
 import io.github.noeppi_noeppi.mods.torment.effect.EffectManager;
 import io.github.noeppi_noeppi.mods.torment.effect.TormentEffect;
@@ -13,7 +15,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import javax.annotation.Nullable;
 import java.util.*;
 
-public class MobSwapEffect implements TormentEffect {
+public class MobSwapEffect extends DefaultTormentEffect {
 
     public static final MobSwapEffect INSTANCE = new MobSwapEffect();
     
@@ -34,22 +36,7 @@ public class MobSwapEffect implements TormentEffect {
     private int uuidBit2 = -1;
 
     private MobSwapEffect() {
-
-    }
-
-    @Override
-    public int minCoolDown() {
-        return 7200;
-    }
-
-    @Override
-    public float minLevel() {
-        return 35;
-    }
-
-    @Override
-    public int weight() {
-        return 4;
+        super(() -> TormentConfig.effects.mob_swap);
     }
 
     @Override
@@ -89,7 +76,7 @@ public class MobSwapEffect implements TormentEffect {
         UUID uid = entity.getUUID();
         EntityType<?> type = entity.getType();
         if (type == EntityType.HORSE || type == EntityType.DONKEY || type == EntityType.MULE) {
-            if (EffectManager.getCachedRawEffectLevel() >= 30) {
+            if (TormentConfig.misc.replace_horses.isPresent() && EffectManager.getCachedRawEffectLevel() >= TormentConfig.misc.replace_horses.get()) {
                 return transformRaw(entity, (uid.getLeastSignificantBits() & (1 << 7)) == 0 ? EntityType.SKELETON_HORSE : EntityType.ZOMBIE_HORSE);
             }
         }

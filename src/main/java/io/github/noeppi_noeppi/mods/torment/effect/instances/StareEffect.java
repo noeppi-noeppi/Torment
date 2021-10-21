@@ -1,5 +1,7 @@
 package io.github.noeppi_noeppi.mods.torment.effect.instances;
 
+import io.github.noeppi_noeppi.mods.torment.config.TormentConfig;
+import io.github.noeppi_noeppi.mods.torment.effect.DefaultTormentEffect;
 import io.github.noeppi_noeppi.mods.torment.effect.EffectConfig;
 import io.github.noeppi_noeppi.mods.torment.effect.TormentEffect;
 import net.minecraft.client.Minecraft;
@@ -14,27 +16,12 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Random;
 
-public class StareEffect implements TormentEffect {
+public class StareEffect extends DefaultTormentEffect {
 
     public static final StareEffect INSTANCE = new StareEffect();
 
     private StareEffect() {
-
-    }
-
-    @Override
-    public int minCoolDown() {
-        return 7200;
-    }
-
-    @Override
-    public float minLevel() {
-        return 40;
-    }
-
-    @Override
-    public int weight() {
-        return 4;
+        super(() -> TormentConfig.effects.stare);
     }
 
     @Override

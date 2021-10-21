@@ -2,6 +2,7 @@ package io.github.noeppi_noeppi.mods.torment.cap;
 
 import io.github.noeppi_noeppi.mods.torment.Torment;
 import io.github.noeppi_noeppi.mods.torment.ability.Ability;
+import io.github.noeppi_noeppi.mods.torment.config.TormentConfig;
 import io.github.noeppi_noeppi.mods.torment.network.TormentDataSerializer;
 import io.github.noeppi_noeppi.mods.torment.ritual.Ritual;
 import net.minecraft.core.BlockPos;
@@ -143,11 +144,11 @@ public class TormentData {
     @SuppressWarnings("UnusedReturnValue")
     public boolean addAbility(Ability ability) {
         if (!abilities.contains(ability)) {
-            if (this.targetLevel + ability.targetCost > 20) {
+            if (this.targetLevel + ability.targetCost() > 20) {
                 return false;
             }
             abilities.add(ability);
-            this.targetLevel += ability.targetCost;
+            this.targetLevel += ability.targetCost();
             sync();
             return true;
         } else {
@@ -161,7 +162,7 @@ public class TormentData {
         if (ritual.getAbility() != null) {
             Ability ability = ritual.getAbility();
             if (abilities.contains(ability)) return false;
-            if (this.targetLevel + ability.targetCost > 20) return false;
+            if (this.targetLevel + ability.targetCost() > 20) return false;
         }
         if (ritual.duration() > 1) {
             this.currentRitual = ritual;
@@ -186,7 +187,7 @@ public class TormentData {
     }
     
     public void addPendingDevilMob(Entity mob) {
-        if (pendingDevilMobs.size() >= 20) {
+        while (pendingDevilMobs.size() >= TormentConfig.misc.max_possess) {
             pendingDevilMobs.remove(0);
         }
         if (!this.pendingDevilMobs.contains(mob.getUUID())) {

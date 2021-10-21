@@ -1,5 +1,6 @@
 package io.github.noeppi_noeppi.mods.torment.effect.instances;
 
+import io.github.noeppi_noeppi.mods.torment.config.TormentConfig;
 import io.github.noeppi_noeppi.mods.torment.effect.EffectConfig;
 import io.github.noeppi_noeppi.mods.torment.effect.TormentEffect;
 import net.minecraft.client.player.LocalPlayer;
@@ -24,12 +25,12 @@ public class GoodbyeEffect implements TormentEffect {
 
     @Override
     public float minLevel() {
-        return 70;
+        return TormentConfig.effects.goodbye.min_level();
     }
 
     @Override
     public int weight() {
-        return 2;
+        return TormentConfig.effects.goodbye.weight();
     }
 
     @Nullable

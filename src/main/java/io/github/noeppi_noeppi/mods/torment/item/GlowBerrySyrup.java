@@ -3,6 +3,7 @@ package io.github.noeppi_noeppi.mods.torment.item;
 import io.github.noeppi_noeppi.libx.base.ItemBase;
 import io.github.noeppi_noeppi.libx.mod.ModX;
 import io.github.noeppi_noeppi.mods.torment.cap.TormentData;
+import io.github.noeppi_noeppi.mods.torment.config.TormentConfig;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
@@ -30,7 +31,7 @@ public class GlowBerrySyrup extends ItemBase {
             }
             player.awardStat(Stats.ITEM_USED.get(this));
             if (!level.isClientSide) {
-                TormentData.get(player).cure(18000, 2);
+                TormentData.get(player).cure(TormentConfig.misc.glowberry_ticks, TormentConfig.misc.glowberry_amount);
             }
             if (!player.isCreative()) {
                 stack.shrink(1);
